@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Instructor Dashboard{% endblock %}
+
+
+{% block content %}
+
+    <style>
+        .My-courses {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    
+        #welcome {
+            margin-bottom: 20px;
+            color: #333;
+        }
+    
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+    
+        .heading h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+    
+        .heading a {
+            background: #4f46e5;
+            color: #fff;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+    
+        .heading a:hover {
+            background: #4338ca;
+        }
+    
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+    
+        .course-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+    
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+        }
+    
+        .thumb img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+    
+        .card-body {
+            padding: 15px;
+        }
+    
+        .card-body h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            color: #111;
+        }
+    
+        .meta {
+            font-size: 14px;
+            color: #555;
+            margin-top: 0px;
+            margin-bottom: 10px;
+        }
+
+        .meta p{
+            margin-top: 4px;
+        }
+    
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+    
+        .status.published {
+            background: #dcfce7;
+            color: #166534;
+        }
+    
+        .status.draft {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    
+        .card-actions {
+            margin-top: 12px;
+        }
+    
+        .btn-manage {
+            display: inline-block;
+            padding: 8px 14px;
+            background: #0ea5e9;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+    
+        .btn-manage:hover {
+            background: #0284c7;
+        }
+    
+        @media (max-width: 600px) {
+            .heading {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <div class="My-courses">
+        <h1 id="welcome">Welcome {{ request.user.username }}</h1>
+        <div class="heading">
+            <h2>My Courses</h2>
+            <a href="{% url 'create_course' %}">+ Create New Course</a>
+        </div>
+        
+        
+        {% if courses %}
+        <div class="course-grid">
+        
+            {% for course in courses %}
+            <div class="course-card">
+        
+                <div class="thumb">
+                    {% if course.thumbnail %}
+                    <img src="{{ course.thumbnail.url }}" alt="course image">
+                    {% endif %}
+                </div>
+        
+                <div class="card-body">
+                    <h3>{{ course.title }}</h3>
+
+                    {% if course.is_published %}
+                    <span class="status published">Published</span>
+                    {% else %}
+                    <span class="status draft">Draft</span>
+                    {% endif %}
+        
+                    <div class="meta">
+                        <p>Level: <b>{{ course.level|title }}</b></p>
+                        <p>Language: <b>{{ course.language }}</b></p>
+                    </div>
+        
+                    <div class="card-actions">
+                        <a href="{% url 'manage_course' course.id %}" class="btn-manage">
+                            Manage Course
+                        </a>
+                    </div>
+                </div>
+        
+            </div>
+            {% endfor %}
+        
+        </div>
+        {% else %}
+        <p style="margin-top:20px;">You haven't created any courses yet.</p>
+        
+        {% endif %}
+    </div>
+{% endblock %}
+
+    
+    

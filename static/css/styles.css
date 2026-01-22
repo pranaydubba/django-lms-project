@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 30px;
+    background: #1f2933;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+}
+
+.nav-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+}
+
+.logo a {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.main-content {
+    padding: 30px;
+    min-height: 80vh;
+}
+
+.footer {
+    background: #1f2933;
+    color: white;
+    text-align: center;
+    padding: 12px;
+}
+
+.messages p {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 4px;
+}
+
+.messages .error {
+    background: #ffd6d6;
+    color: #900;
+}
+
+.messages .success {
+    background: #d6ffd6;
+    color: #060;
+}
+
+
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    width: 190px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 12px;
+    color: #111827;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f3f4f6;
+}
+
+.username {
+    padding: 10px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+#welcome{
+    text-align: center;
+    
+}
+

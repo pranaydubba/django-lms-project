@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<style>
+    .form-page {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+    }
+
+    .form-heading {
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 18px;
+        color: #333;
+    }
+
+    .form-card {
+        background: #fff;
+        padding: 36px;
+        border-radius: 14px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .form-card table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 22px;
+    }
+
+    .form-card th {
+        text-align: left;
+        font-weight: 500;
+        padding-bottom: 6px;
+        color: #222;
+        vertical-align: top;
+        width: 35%;
+    }
+
+    .form-card td {
+        width: 65%;
+    }
+
+    .form-card input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 14px;
+        border-radius: 7px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    .form-card input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+
+    .form-card input[type="submit"] {
+        width: 100%;
+        margin-top: 20px;
+        padding: 13px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .form-card input[type="submit"]:hover {
+        background-color: #0069d9;
+    }
+
+    .form-footer {
+        margin-top: 16px;
+        font-size: 14px;
+    }
+
+    .form-footer a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="form-page">
+    <div class="form-wrapper">
+        <div class="form-heading">Login</div>
+        <div class="form-card">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{ login_form.as_table }}
+                </table>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+        <div class="form-footer">
+            New user?
+            <a href="{% url 'register' %}">Register here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

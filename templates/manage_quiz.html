@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block title %}Manage Quiz{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Page layout */
+    .quiz-container {
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h2,
+    h3 {
+        color: #1f2937;
+        margin-bottom: 10px;
+    }
+
+    hr {
+        margin: 20px 0;
+        border: none;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    /* Flex row */
+    .form-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+    }
+
+    /* Inputs */
+    textarea {
+        flex: 1;
+        min-height: 38px;
+        max-height: 70px;
+        padding: 6px 8px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        resize: vertical;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        padding: 6px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    input[type="number"] {
+        width: 70px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 6px;
+        margin-right: 4px;
+    }
+
+    /* Buttons */
+    button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        background: #2563eb;
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+
+    button[name="delete_question"],
+    button[name="delete_option"] {
+        background: #dc2626;
+    }
+
+    button[name="delete_question"]:hover,
+    button[name="delete_option"]:hover {
+        background: #b91c1c;
+    }
+
+    /* Question card */
+    .question-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        background: #f9fafb;
+    }
+
+    /* Options */
+    ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 10px;
+    }
+
+    li {
+        margin-bottom: 8px;
+        padding: 8px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+    }
+
+    .add-option {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #d1d5db;
+    }
+
+    .empty {
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+        .form-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        button,
+        input[type="number"] {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-back">
+    <a href="{% url 'manage_course' quiz.section.course.id %}">
+        ← Back to Course
+    </a>
+</div>
+
+<div class="quiz-container">
+
+    <h2>{{ quiz.title }}</h2>
+    <hr>
+
+    <!-- Add Question -->
+    <h3>Add Question</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            {{ qform.question_text }}
+            {{ qform.marks }}
+            <button type="submit" name="add_question">Add Question</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <!-- Questions -->
+    <h3>Questions</h3>
+
+    {% for q in questions %}
+    <div class="question-card">
+
+        <!-- Edit Question -->
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ q.id }}">
+            <div class="form-row">
+                <textarea name="question_text" required>{{ q.question_text }}</textarea>
+                <input type="number" name="marks" value="{{ q.marks }}">
+                <button name="update_question">Update</button>
+                <button name="delete_question" onclick="return confirm('Delete question?')">
+                    Delete
+                </button>
+            </div>
+        </form>
+
+        <!-- Options -->
+        <ul>
+            {% for opt in q.option_set.all %}
+            <li>
+                <form method="post" class="form-row">
+                    {% csrf_token %}
+                    <input type="hidden" name="option_id" value="{{ opt.id }}">
+                    <input type="text" name="text" value="{{ opt.text }}" required>
+                    <input type="checkbox" name="is_correct" {% if opt.is_correct %}checked{% endif %}>
+                    <button name="update_option">Update</button>
+                    <button name="delete_option" onclick="return confirm('Delete option?')">
+                        Delete
+                    </button>
+                </form>
+            </li>
+            {% empty %}
+            <li class="empty">No options added</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Add Option -->
+        <form method="post" class="add-option">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ q.id }}">
+            <div class="form-row">
+                {{ oform.text }}
+                {{ oform.is_correct }} Correct
+                <button name="add_option">Add Option</button>
+            </div>
+        </form>
+
+    </div>
+    {% empty %}
+    <p class="empty">No questions added yet.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    .course-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .title-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .title-head h2 {
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .badge {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    .btn-success {
+        background: #16a34a;
+        color: #fff;
+    }
+
+    .btn-warning {
+        background: #f59e0b;
+        color: #fff;
+    }
+
+    h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .video-wrapper {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+    }
+
+    .video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .course-description {
+        margin-top: 14px;
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    .section-box {
+        background: #ffffff;
+        padding: 18px 20px;
+        margin-bottom: 20px;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .lesson-box {
+        background: #f9fafb;
+        padding: 14px 16px;
+        margin: 12px 0;
+        border-left: 4px solid #2563eb;
+        border-radius: 10px;
+    }
+
+    .lesson-box a {
+        text-decoration: none;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 24px 0;
+    }
+</style>
+
+<div class="course-container">
+
+    <div class="card">
+        <div class="title-head">
+            <h2>{{ course.title }}</h2>
+            {% if is_enrolled %}
+            <span class="badge">Enrolled</span>
+            {% else %}
+            <a href="{% url 'enrole_course' course.id %}" class="btn btn-success">Enroll</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if preview_lesson and preview_lesson.video %}
+    <div class="card">
+        <h3>🎬 Course Preview</h3>
+        <div class="video-wrapper">
+            <video controls>
+                <source src="{{ preview_lesson.video.url }}" type="video/mp4">
+            </video>
+        </div>
+        <p class="course-description">
+            Preview lesson: {{ preview_lesson.title }}
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <p class="course-description">{{ course.description }}</p>
+        <hr>
+        <p><strong>Instructor:</strong> {{ course.instructor.username }}</p>
+    </div>
+
+    {% if is_enrolled %}
+    <h3>Course Content</h3>
+
+    {% for section in sections %}
+    <div class="section-box">
+        <h4>📘 {{ section.title }}</h4>
+
+        {% for lesson in section.lessons.all %}
+        <div class="lesson-box">
+            <strong>🎥 {{ lesson.title }}</strong>
+
+            {% if lesson.video %}
+            <div class="video-wrapper" style="margin-top:10px;">
+                <video controls>
+                    <source src="{{ lesson.video.url }}" type="video/mp4">
+                </video>
+            </div>
+            {% endif %}
+
+            {% if lesson.notes %}
+            <p>
+                📄 <a href="{{ lesson.notes.url }}" download>Download Notes</a>
+            </p>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>No lessons in this section.</p>
+        {% endfor %}
+
+        {% if section.quiz %}
+        <div style="margin-top:15px; text-align:right;">
+            {% if section.quiz_result %}
+            <a href="{% url 'test_result' section.quiz.id section.course.id %}" class="btn btn-warning">
+                View Result
+            </a>
+            {% else %}
+            <a href="{% url 'start_test' section.quiz.id %}" class="btn btn-warning">
+                📝 Take Test
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No sections available.</p>
+    {% endfor %}
+    {% else %}
+    <div class="card">
+        <strong>Please enroll to view course content.</strong>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .quiz-container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .question-box {
+        background: #ffffff;
+        padding: 16px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .option {
+        margin: 8px 0;
+    }
+
+    .submit-btn {
+        background: #16a34a;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .submit-btn:hover {
+        background: #15803d;
+    }
+</style>
+
+<div class="quiz-container">
+
+    <a href="{% url 'course_detail' course_id=quiz.section.course.id %}">
+        ← Back to Course
+    </a>
+
+    <h2>📝 {{ quiz.title }}</h2>
+    <p><strong>Total Marks:</strong> {{ quiz.total_marks }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for question in questions %}
+        <div class="question-box">
+
+            <h4>Q{{ forloop.counter }}. {{ question.question_text }}</h4>
+
+            {% for option in question.option_set.all %}
+            <div class="option">
+                <label>
+                    <input type="radio" name="question_{{question.id}}" value="{{ option.id }}" required>
+                    {{ option.text }}
+                </label>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+
+        <div style="text-align:center;">
+            <button type="submit" class="submit-btn">
+                Submit Test
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

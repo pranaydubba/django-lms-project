@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}All Courses{% endblock %}
+
+{% block content %}
+
+<style>
+    .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.course-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.course-card-body {
+    padding: 16px;
+}
+
+.course-card-body h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.course-meta {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px; 
+}
+
+.course-meta p{
+    margin: 0;       
+    line-height: 1.3;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #d1fae5;
+    color: #065f46;
+    margin-bottom: 12px;
+}
+
+.badge-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+
+
+.badge.draft {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge.enrolled {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+.course-actions {
+    margin-top: 12px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: #fff;
+}
+</style>
+
+<h2>Available Courses</h2>
+<hr>
+
+<div class="course-grid">
+
+    {% for course in courses %}
+    <div class="course-card">
+
+        <img src="{{ course.thumbnail.url|default:'/static/images/course.jpg' }}" alt="Course Image">
+
+        <div class="course-card-body">
+            <h3>{{ course.title }}</h3>
+
+            <div class="badge-row">
+                {%if course.is_published %}
+                <span class="badge published">Published</span>
+                {% else %}
+                <span class="badge draft">Draft</span>
+                {% endif %}
+                {% if course.id in enrolled_course_ids %}
+                <span class="badge enrolled">Enrolled</span>
+                {% endif %}
+            </div>
+
+            <div class="course-meta">
+                <p>Level: {{ course.level|default:"Beginner" }}</p>
+                <p>Language: {{ course.language|default:"English" }}</p>
+                <p>Instructor: {{ course.instructor }}</p>
+            </div>
+
+            <div class="course-actions">
+                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">
+                    View Course
+                </a>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

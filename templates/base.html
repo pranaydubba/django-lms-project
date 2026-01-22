@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LMS{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">LMS</a>
+            </div>
+    
+            <div class="nav-right">
+                {% if user.is_authenticated %}
+                
+    
+                {% if user.role == 'student' %}
+                    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                    <a href="{% url 'course_list' %}">Courses</a>
+                
+                {% elif user.role == 'instructor' %}
+                    <a href="{% url 'instructor_dashboard' %}">Dashboard</a>
+                    <a href="">Create Course</a>
+                
+                {% elif user.is_superuser %}
+                    <a href="/admin/">Admin Panel</a>
+                {% endif %}
+
+                <div class="profile-dropdown">
+                    <img src="{{ request.user.profile_pic.url }}" alt="Profile" class="profile-pic" id="profileToggle">
+                
+                    <div class="dropdown-menu" id="profileMenu">
+                        <p class="username">{{ request.user.username }}</p>
+                        <hr>
+                        <a href="{% url 'profile' %}">View Profile</a>
+                        <a href="{% url 'change_password' %}">Change Password</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+                
+                {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% block content %}
+            
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Learning Management System | Django Project</p>
+    </footer>
+
+    {% block extra_js %}
+        <script>
+            document.getElementById("profileToggle").addEventListener("click", function () {
+                document.getElementById("profileMenu").classList.toggle("show");
+            });
+
+            
+        </script>
+        
+        <style>
+            .show {
+                display: block;
+            }
+        </style>
+    {% endblock %}
+</body>
+</html>

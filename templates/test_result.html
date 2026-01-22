@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Test Result{% endblock %}
+
+{% block content %}
+<div style="max-width:600px; margin:auto; text-align:center;">
+
+    <h2>🎉 Test Result</h2>
+
+    <p><strong>{{ result.quiz_title }}</strong></p>
+    <p>Score: {{ result.score }} / {{ result.total_marks }}</p>
+    <p>Percentage: {{ result.percentage }}%</p>
+
+    <a href="{% url 'course_detail' course_id %}" class="btn btn-success">
+        Back to Course
+    </a>
+
+</div>
+{% endblock %}
