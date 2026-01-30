@@ -1,38 +1,42 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LMS{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
+    {% csrf_token %}
     <header>
         <nav class="navbar">
             <div class="logo">
-                <a href="/">LMS</a>
+                <a href="/">EduLearn Solutions</a>
             </div>
-    
+
             <div class="nav-right">
                 {% if user.is_authenticated %}
-                
-    
+
+
                 {% if user.role == 'student' %}
-                    <a href="{% url 'student_dashboard' %}">Dashboard</a>
-                    <a href="{% url 'course_list' %}">Courses</a>
-                
+                <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                <a href="{% url 'course_list' %}">Courses</a>
+                <a href="{% url 'chatbot' %}" id="chatbotToggle" title="Student Assistant">🤖</a>
+
                 {% elif user.role == 'instructor' %}
-                    <a href="{% url 'instructor_dashboard' %}">Dashboard</a>
-                    <a href="">Create Course</a>
-                
+                <a href="{% url 'instructor_dashboard' %}">Dashboard</a>
+                <a href="">Create Course</a>
+
                 {% elif user.is_superuser %}
-                    <a href="/admin/">Admin Panel</a>
+                <a href="/admin/">Admin Panel</a>
                 {% endif %}
 
                 <div class="profile-dropdown">
                     <img src="{{ request.user.profile_pic.url }}" alt="Profile" class="profile-pic" id="profileToggle">
-                
+
                     <div class="dropdown-menu" id="profileMenu">
                         <p class="username">{{ request.user.username }}</p>
                         <hr>
@@ -41,7 +45,7 @@
                         <a href="{% url 'logout' %}">Logout</a>
                     </div>
                 </div>
-                
+
                 {% else %}
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'register' %}">Register</a>
@@ -52,28 +56,104 @@
 
     <main class="main-content">
         {% block content %}
-            
+
         {% endblock %}
     </main>
+
+    {% if user.is_authenticated and user.role == "student" %}
+    <div id="chatbotPopup" class="chatbot-popup">
+        <div class="chatbot-header">
+            <span>Student Assistant</span>
+            <button onclick="toggleChatbot()">X</button>
+        </div>
+    
+        <div id="chatbox" class="chatbot-body"></div>
+    
+        <div class="chatbot-input">
+            <input type="text" id="msg" placeholder="Ask about your courses..." />
+            <button onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+    
+    {% endif %}
+
 
     <footer class="footer">
         <p>© 2026 Learning Management System | Django Project</p>
     </footer>
 
     {% block extra_js %}
-        <script>
-            document.getElementById("profileToggle").addEventListener("click", function () {
-                document.getElementById("profileMenu").classList.toggle("show");
-            });
+    <script>
+        document.getElementById("profileToggle").addEventListener("click", function () {
+            document.getElementById("profileMenu").classList.toggle("show");
+        });
 
-            
-        </script>
-        
-        <style>
-            .show {
-                display: block;
+        function toggleChatbot() {
+                document.getElementById("chatbotPopup")
+                    .classList.toggle("show-chatbot");
             }
-        </style>
+
+        document.getElementById("chatbotToggle")?.addEventListener("click", function (e) {
+            e.preventDefault();
+            toggleChatbot();
+        });
+
+        function sendMsg() {
+                const msgInput = document.getElementById("msg");
+                const chatbox = document.getElementById("chatbox");
+
+                const userMessage = msgInput.value.trim();
+                if (!userMessage) return;
+
+                chatbox.innerHTML += `<p><b>You:</b> ${userMessage}</p>`;
+                msgInput.value = "";
+
+                fetch("/chatbot/chat/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify({
+                        message: userMessage
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        chatbox.innerHTML += `<p><b>Bot:</b> ${data.reply}</p>`;
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        chatbox.innerHTML += `<p style="color:red;">Bot error</p>`;
+                    });
+            }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+
+    </script>
+
+    <style>
+        .show {
+            display: block;
+        }
+    </style>
     {% endblock %}
 </body>
+
 </html>

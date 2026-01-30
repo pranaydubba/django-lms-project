@@ -26,4 +26,5 @@ urlpatterns = [
     path('courses/',include('courses.urls')),
     path('quizzes/',include('quizzes.urls')),
     path('enrollments/',include('enrollments.urls')),
+    path('chatbot/',include('chatbot.urls'))
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
