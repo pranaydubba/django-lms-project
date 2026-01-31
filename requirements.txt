@@ -1,0 +1,30 @@
+# Django LMS
+Django>=6.0
+psycopg2-binary>=2.9.9
+Pillow>=10.0.0
+python-dotenv>=1.2.0
+
+# LLM (Groq - free)
+groq>=0.37.0
+langchain>=1.2.7
+langchain-core>=1.2.7
+langchain-community>=0.4.0
+langchain-groq>=1.1.0
+
+# RAG Vector Store
+faiss-cpu>=1.7.4
+
+# Embeddings
+sentence-transformers>=5.0.0
+transformers>=5.0.0
+torch>=2.0.0
+
+# Data & utilities
+numpy>=1.26.0
+pandas>=2.0.0
+requests>=2.32.0
+tqdm>=4.67.0
+
+# Validation & settings
+pydantic>=2.7.4
+pydantic-settings>=2.0.0

@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LMS{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body>
@@ -24,7 +26,7 @@
                 {% if user.role == 'student' %}
                 <a href="{% url 'student_dashboard' %}">Dashboard</a>
                 <a href="{% url 'course_list' %}">Courses</a>
-                <a href="{% url 'chatbot' %}" id="chatbotToggle" title="Student Assistant">🤖</a>
+                <a href="{% url 'chatbot' %}" id="chatbotToggle" title="Student Assistant"><i class="fa-solid fa-robot chatbot-icon"></i></a>
 
                 {% elif user.role == 'instructor' %}
                 <a href="{% url 'instructor_dashboard' %}">Dashboard</a>

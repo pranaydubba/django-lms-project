@@ -15,23 +15,24 @@ body {
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 22px;
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
-    margin-left: 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;;
 }
 
-.nav-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    cursor: pointer;
-    border: 2px solid #e5e7eb;
+.chatbot-icon {
+    color: #38bdf8;
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
 }
+
 
 .logo a {
     font-size: 22px;
@@ -68,6 +69,8 @@ body {
 
 .profile-dropdown {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .dropdown-menu {
